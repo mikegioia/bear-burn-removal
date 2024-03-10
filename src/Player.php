@@ -3,8 +3,8 @@
 namespace Magic;
 
 use Magic\Exceptions\DrawFromEmptyDeckException;
-use Magic\Exceptions\PlayerWithZeroLifeException;
 use Magic\Exceptions\GameOverException;
+use Magic\Exceptions\PlayerWithZeroLifeException;
 
 class Player
 {
@@ -164,7 +164,7 @@ class Player
             $this->main();
             $this->combat();
             $this->end();
-        } catch (DrawFromEmptyDeckException | PlayerWithZeroLifeException $e) {
+        } catch (DrawFromEmptyDeckException|PlayerWithZeroLifeException $e) {
             throw new GameOverException($this, $e->getMessage());
         }
     }
@@ -240,7 +240,7 @@ class Player
             if ($count) {
                 $this->logAction(sprintf('attacked with %s creature%s dealing %s damage',
                     $count,
-                    $count === 1 ? '' : 's',
+                    1 === $count ? '' : 's',
                     $damage
                 ));
 
@@ -318,7 +318,6 @@ class Player
      */
     private function playBurn(): void
     {
-        //
     }
 
     /**
@@ -330,5 +329,4 @@ class Player
     {
         $this->game->logAction($this, $message);
     }
-
 }

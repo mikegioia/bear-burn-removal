@@ -132,7 +132,6 @@ class Board
         return count($this->getUntappedLands()) > 0;
     }
 
-
     /**
      * @return Card
      *

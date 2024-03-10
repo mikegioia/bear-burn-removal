@@ -2,8 +2,8 @@
 
 namespace Magic\Cards;
 
-use Magic\Player;
 use Magic\Card;
+use Magic\Player;
 
 class Land extends Card
 {
