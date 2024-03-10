@@ -15,6 +15,11 @@ class Player
     private Deck $deck;
 
     /**
+     * @var Game
+     */
+    private Game $game;
+
+    /**
      * @var Graveyard
      */
     private Graveyard $graveyard;
@@ -44,10 +49,11 @@ class Player
      */
     private int $turnsTaken = 0;
 
-    public function __construct(Deck $deck, int $playerId)
+    public function __construct(Deck $deck, Game $game, int $playerId)
     {
         $this->board = new Board();
         $this->deck = $deck;
+        $this->game = $game;
         $this->graveyard = new Graveyard();
         $this->hand = new Hand();
         $this->isStartingPlayer = 1 === $playerId;
@@ -135,6 +141,16 @@ class Player
     }
 
     /**
+     * Logs a game action to the event log.
+     *
+     * @param  string $message
+     */
+    private function logAction(string $message): void
+    {
+        $this->game->logAction($this, $message);
+    }
+
+    /**
      * Untap step.
      */
     private function untap(): void
@@ -191,6 +207,7 @@ class Player
     {
         if ($this->hand->hasLand()) {
             $this->hand->getLand()->play($this->board);
+            $this->logAction('played a land');
         }
     }
 
@@ -204,6 +221,7 @@ class Player
 
             if ($this->board->hasManaAvailable($creature)) {
                 $creature->play($this->board);
+                $this->logAction('played a creature');
 
                 // Try to play another one if we can
                 $this->playCreatures();

@@ -2,6 +2,8 @@
 
 namespace Magic;
 
+use Magic\Exceptions\ManaNotAvailableException;
+
 class Board
 {
     /**
@@ -65,9 +67,25 @@ class Board
      */
     public function getUntappedLands(): array
     {
-        return array_filter($this->lands, function (Card $land) {
-            return false === $land->getIsTapped();
+        return array_filter($this->lands, function (Card $card) {
+            return false === $card->getIsTapped();
         });
+    }
+
+    /**
+     * @throws ManaNotAvailableException
+     *
+     * @return Card
+     */
+    public function getUntappedLand(): Card
+    {
+        $untappedLands = $this->getUntappedLands();
+
+        if (! count($untappedLands)) {
+            throw new ManaNotAvailableException();
+        }
+
+        return array_pop($untappedLands);
     }
 
     /**
@@ -78,5 +96,19 @@ class Board
     public function hasManaAvailable(Card $card): bool
     {
         return count($this->getUntappedLands()) >= $card->getCastingCost();
+    }
+
+    /**
+     * Taps lands to pay for the card.
+     *
+     * @throws ManaNotAvailableException
+     *
+     * @param  Card   $card
+     */
+    public function tapLands(Card $card): void
+    {
+        for ($i = 0; $i < $card->getCastingCost(); $i++) {
+            $this->getUntappedLand()->tap();
+        }
     }
 }

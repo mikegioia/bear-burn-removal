@@ -30,6 +30,7 @@ class Bear extends Card
      */
     public function play(Board $board): void
     {
+        $board->tapLands($this);
         $board->addCreature($this);
     }
 }
