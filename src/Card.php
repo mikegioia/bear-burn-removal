@@ -22,7 +22,7 @@ abstract class Card
     /**
      * Performs card actions.
      */
-    abstract public function play(Board $board): void;
+    abstract public function play(Player $player): void;
 
     /**
      * Mark the card as tapped and not usable this turn.
@@ -58,11 +58,27 @@ abstract class Card
     }
 
     /**
+     * @return int
+     */
+    public function getPower(): int
+    {
+        return 0;
+    }
+
+    /**
+     * @return int
+     */
+    public function getToughness(): int
+    {
+        return 0;
+    }
+
+    /**
      * Overridden by sub-classes.
      *
      * @return bool
      */
-    public function isCreature(): bool
+    public function isBurn(): bool
     {
         return false;
     }
@@ -72,7 +88,7 @@ abstract class Card
      *
      * @return bool
      */
-    public function isInstant(): bool
+    public function isCreature(): bool
     {
         return false;
     }
@@ -92,7 +108,7 @@ abstract class Card
      *
      * @return bool
      */
-    public function isSorcery(): bool
+    public function isRemoval(): bool
     {
         return false;
     }

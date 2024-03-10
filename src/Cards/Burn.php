@@ -2,7 +2,7 @@
 
 namespace Magic\Cards;
 
-use Magic\Board;
+use Magic\Player;
 use Magic\Card;
 
 class Burn extends Card
@@ -18,12 +18,17 @@ class Burn extends Card
     /**
      * @return bool
      */
-    public function isInstant(): bool
+    public function isBurn(): bool
     {
         return true;
     }
 
-    public function play(Board $board): void
+    /**
+     * Deal 3 damage to a creature or player.
+     *
+     * @param  Player $player
+     */
+    public function play(Player $player): void
     {
     }
 }

@@ -2,6 +2,7 @@
 
 namespace Magic;
 
+use Magic\Exceptions\CardNotFoundException;
 use Magic\Exceptions\ManaNotAvailableException;
 
 class Board
@@ -54,12 +55,63 @@ class Board
         return $this->creatures;
     }
 
+    public function hasCreatures(): bool
+    {
+        return count($this->creatures) > 0;
+    }
+
+    /**
+     * @return array<Card>
+     */
+    public function getUntappedCreatures(): array
+    {
+        return array_filter($this->creatures, function (Card $card) {
+            return false === $card->getIsTapped();
+        });
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasUntappedCreatures(): bool
+    {
+        return count($this->getUntappedCreatures()) > 0;
+    }
+
+    /**
+     * Removes a creature, if found, from the list of cards
+     * and returns that card.
+     *
+     * @return Card
+     *
+     * @throws CardNotFoundException
+     */
+    public function takeCreature(): Card
+    {
+        foreach ($this->creatures as $i => $card) {
+            // Remove this card from hand
+            unset($this->creatures[$i]);
+
+            return $card;
+        }
+
+        throw new CardNotFoundException();
+    }
+
     /**
      * @return array<Card>
      */
     public function getLands(): array
     {
         return $this->lands;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasLands(): bool
+    {
+        return count($this->lands) > 0;
     }
 
     /**
@@ -71,6 +123,15 @@ class Board
             return false === $card->getIsTapped();
         });
     }
+
+    /**
+     * @return bool
+     */
+    public function hasUntappedLands(): bool
+    {
+        return count($this->getUntappedLands()) > 0;
+    }
+
 
     /**
      * @return Card

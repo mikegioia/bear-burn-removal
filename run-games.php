@@ -27,10 +27,31 @@ require __DIR__.'/vendor/autoload.php';
 
 // @todo - read in command line arguments - $argv
 
-// Player decks
-$deckOne = new Deck(bear: 37, land: 23);
-$deckTwo = new Deck(removal: 37, land: 23);
+// Player win counters
+$wins = [
+    1 => 0,
+    2 => 0
+];
 
-// Run game
-$game = new Game($deckOne, $deckTwo);
-$game->play();
+try {
+    for ($i = 0; $i < 1000; $i++) {
+        // Set up the new game
+        $deckOne = new Deck(bear: 37, land: 23);
+        $deckTwo = new Deck(removal: 37, land: 23);
+        $game = new Game($deckOne, $deckTwo);
+
+        // Play a game
+        $winner = $game->play();
+        $wins[$winner->getPlayerId()]++;
+        // echo implode(PHP_EOL, $game->getPrintableGameLog());
+    }
+
+} catch (Throwable $e) {
+    echo 'Error encountered during game!', PHP_EOL;
+    echo $e->getMessage(), PHP_EOL;
+
+    exit(1);
+}
+
+echo PHP_EOL, 'Results: ', PHP_EOL, '  Player 1: ', $wins[1],
+    PHP_EOL, '  Player 2: ', $wins[2], PHP_EOL;

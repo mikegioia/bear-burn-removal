@@ -2,6 +2,10 @@
 
 namespace Magic;
 
+use Magic\Exceptions\DrawFromEmptyDeckException;
+use Magic\Exceptions\PlayerWithZeroLifeException;
+use Magic\Exceptions\GameOverException;
+
 class Player
 {
     /**
@@ -66,11 +70,27 @@ class Player
     }
 
     /**
+     * @return Board
+     */
+    public function getBoard(): Board
+    {
+        return $this->board;
+    }
+
+    /**
      * @return Deck
      */
     public function getDeck(): Deck
     {
         return $this->deck;
+    }
+
+    /**
+     * @return Game
+     */
+    public function getGame(): Game
+    {
+        return $this->game;
     }
 
     /**
@@ -122,6 +142,14 @@ class Player
     }
 
     /**
+     * @return Player
+     */
+    public function getOpponent(): Player
+    {
+        return $this->getGame()->getOpponent($this);
+    }
+
+    /**
      * Perform the best sequence of actions for the player's turn.
      *   1. If burn in hand and bear on board, target bear
      *   2. If removal in hand and bear on board, target bear
@@ -130,24 +158,30 @@ class Player
      */
     public function takeTurn(): void
     {
-        $this->untap();
-        $this->draw();
-        $this->main();
-        $this->combat();
-        $this->end();
-
-        print_r($this->hand);
-        print_r($this->board);
+        try {
+            $this->untap();
+            $this->draw();
+            $this->main();
+            $this->combat();
+            $this->end();
+        } catch (DrawFromEmptyDeckException | PlayerWithZeroLifeException $e) {
+            throw new GameOverException($this, $e->getMessage());
+        }
     }
 
     /**
-     * Logs a game action to the event log.
+     * Decrease the player's life total. If it goes to 0 or lower,
+     * throw an exception that the player lost.
      *
-     * @param  string $message
+     * @param  int $amount
      */
-    private function logAction(string $message): void
+    public function loseLife(int $amount): void
     {
-        $this->game->logAction($this, $message);
+        $this->lifeTotal = $this->lifeTotal - $amount;
+
+        if ($this->lifeTotal <= 0) {
+            throw new PlayerWithZeroLifeException($this);
+        }
     }
 
     /**
@@ -180,8 +214,8 @@ class Player
     {
         $this->playLand();
         $this->playCreatures();
-        // remove any creatures
-        // damage opponent or creatures
+        $this->playRemoval();
+        $this->playBurn();
     }
 
     /**
@@ -189,7 +223,30 @@ class Player
      */
     private function combat(): void
     {
-        // attack with any creatures from previous turn
+        // Attack with as many creatures as possible
+        if ($this->board->hasUntappedCreatures()) {
+            $creatures = $this->board->getUntappedCreatures();
+            $count = 0;
+            $damage = 0;
+
+            foreach ($creatures as $creature) {
+                if (! $creature->getIsSummoningSick()) {
+                    $creature->tap();
+                    ++$count;
+                    $damage += $creature->getPower();
+                }
+            }
+
+            if ($count) {
+                $this->logAction(sprintf('attacked with %s creature%s dealing %s damage',
+                    $count,
+                    $count === 1 ? '' : 's',
+                    $damage
+                ));
+
+                $this->getOpponent()->loseLife($damage);
+            }
+        }
     }
 
     /**
@@ -206,7 +263,7 @@ class Player
     private function playLand(): void
     {
         if ($this->hand->hasLand()) {
-            $this->hand->getLand()->play($this->board);
+            $this->hand->takeLand()->play($this);
             $this->logAction('played a land');
         }
     }
@@ -217,10 +274,10 @@ class Player
     private function playCreatures(): void
     {
         if ($this->hand->hasCreature()) {
-            $creature = $this->hand->getCreature();
+            $creature = $this->hand->takeCreature();
 
             if ($this->board->hasManaAvailable($creature)) {
-                $creature->play($this->board);
+                $creature->play($this);
                 $this->logAction('played a creature');
 
                 // Try to play another one if we can
@@ -231,4 +288,47 @@ class Player
             }
         }
     }
+
+    /**
+     * Tries to remove as many creatures as possible.
+     */
+    private function playRemoval(): void
+    {
+        if ($this->hand->hasRemoval()) {
+            if ($this->getOpponent()->getBoard()->hasCreatures()) {
+                $removal = $this->hand->takeRemoval();
+
+                if ($this->board->hasManaAvailable($removal)) {
+                    $removal->play($this);
+                    $this->logAction('played a removal spell');
+
+                    // Try to play another one if we can
+                    $this->playRemoval();
+                } else {
+                    // Don't have mana so put the card back in hand
+                    $this->hand->addCard($removal);
+                }
+            }
+        }
+    }
+
+    /**
+     * Tries to remove creatures and also win the game with
+     * direct damage to the opponent.
+     */
+    private function playBurn(): void
+    {
+        //
+    }
+
+    /**
+     * Logs a game action to the event log.
+     *
+     * @param  string $message
+     */
+    private function logAction(string $message): void
+    {
+        $this->game->logAction($this, $message);
+    }
+
 }

@@ -36,6 +36,19 @@ class Hand
     }
 
     /**
+     * Removes a burn spell, if found, from the list of cards
+     * and returns that card.
+     *
+     * @return Card
+     *
+     * @throws CardNotFoundException
+     */
+    public function takeBurn(): Card
+    {
+        return $this->take('isBurn');
+    }
+
+    /**
      * Removes a creature, if found, from the list of cards
      * and returns that card.
      *
@@ -43,18 +56,9 @@ class Hand
      *
      * @throws CardNotFoundException
      */
-    public function getCreature(): Card
+    public function takeCreature(): Card
     {
-        foreach ($this->cards as $i => $card) {
-            if ($card->isCreature()) {
-                // Remove this card from hand
-                unset($this->cards[$i]);
-
-                return $card;
-            }
-        }
-
-        throw new CardNotFoundException();
+        return $this->take('isCreature');
     }
 
     /**
@@ -65,10 +69,87 @@ class Hand
      *
      * @throws CardNotFoundException
      */
-    public function getLand(): Card
+    public function takeLand(): Card
+    {
+        return $this->take('isLand');
+    }
+
+    /**
+     * Removes a removal spell, if found, from the list of cards
+     * and returns that card.
+     *
+     * @return Card
+     *
+     * @throws CardNotFoundException
+     */
+    public function takeRemoval(): Card
+    {
+        return $this->take('isRemoval');
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasBurn(): bool
+    {
+        return $this->has('isBurn');
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasCreature(): bool
+    {
+        return $this->has('isCreature');
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasLand(): bool
+    {
+        return $this->has('isLand');
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasRemoval(): bool
+    {
+        return $this->has('isRemoval');
+    }
+
+    /**
+     * Checks if the player's hand has a card of the chosen type.
+     *
+     * @param  string  $typeFn
+     *
+     * @return bool
+     */
+    private function has(string $typeFn): bool
+    {
+        foreach ($this->cards as $card) {
+            if ($card->$typeFn()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Takes a card out of the hand.
+     *
+     * @param  string $typeFn
+     *
+     * @return Card
+     *
+     * @throws CardNotFoundException
+     */
+    private function take(string $typeFn): Card
     {
         foreach ($this->cards as $i => $card) {
-            if ($card->isLand()) {
+            if ($card->$typeFn()) {
                 // Remove this card from hand
                 unset($this->cards[$i]);
 
@@ -77,33 +158,5 @@ class Hand
         }
 
         throw new CardNotFoundException();
-    }
-
-    /**
-     * @return bool
-     */
-    public function hasCreature(): bool
-    {
-        foreach ($this->cards as $card) {
-            if ($card->isCreature()) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    /**
-     * @return bool
-     */
-    public function hasLand(): bool
-    {
-        foreach ($this->cards as $card) {
-            if ($card->isLand()) {
-                return true;
-            }
-        }
-
-        return false;
     }
 }

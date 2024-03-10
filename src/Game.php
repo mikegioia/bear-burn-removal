@@ -19,6 +19,9 @@
 
 namespace Magic;
 
+use Magic\Exceptions\GameOverException;
+use Magic\Exceptions\TooManyTurnsException;
+
 class Game
 {
     /**
@@ -43,6 +46,15 @@ class Game
      */
     private int $turns = 0;
 
+    /**
+     * @var int
+     */
+    public const MAX_TURN_COUNT = 250;
+
+    /**
+     * @param Deck $playerOneDeck
+     * @param Deck $playerTwoDeck
+     */
     public function __construct(Deck $playerOneDeck, Deck $playerTwoDeck)
     {
         $this->playerOne = new Player($playerOneDeck, $this, 1);
@@ -52,15 +64,30 @@ class Game
     /**
      * Runs a single game from start to finish.
      * Returns the player who won.
+     *
+     * @return Player
      */
-    public function play(): void
+    public function play(): Player
     {
-        // Each player takes turns until the game ends
-        $this->takeTurn();
+        try {
+            // Each player takes turns until the game ends.
+            // The game ends when an exception is thrown that
+            // a player lost.
+            while ($this->turns < self::MAX_TURN_COUNT) {
+                $this->takeTurn();
+            }
+        } catch (GameOverException $e) {
+            $this->logAction($e->getPlayer(), 'won the game, '.$e->getMessage());
 
-        // Return winning player
+            return $e->getPlayer();
+        }
+
+        throw new TooManyTurnsException();
     }
 
+    /**
+     * Update the turns counter and take a turn for each player.
+     */
     public function takeTurn(): void
     {
         ++$this->turns;
@@ -79,6 +106,26 @@ class Game
     public function getGameLog(): array
     {
         return $this->gameLog;
+    }
+
+    /**
+     * @return array<string>
+     */
+    public function getPrintableGameLog(): array
+    {
+        $rows = [];
+
+        foreach ($this->gameLog as $turnNumber => $playerEvents) {
+            foreach ($playerEvents as $playerId => $events) {
+                $rows[] = sprintf('Turn %s - %s - %s',
+                    $turnNumber,
+                    $playerId,
+                    implode('; ', $events)
+                );
+            }
+        }
+
+        return $rows;
     }
 
     /**

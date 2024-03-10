@@ -7,6 +7,7 @@ use Magic\Cards\Burn;
 use Magic\Cards\Land;
 use Magic\Cards\Removal;
 use Magic\Exceptions\DrawFromEmptyDeckException;
+use Magic\Exceptions\InvalidDeckException;
 
 class Deck
 {
@@ -15,6 +16,8 @@ class Deck
      */
     private array $cards = [];
 
+    private const MIN_DECK_SIZE = 40;
+
     /**
      * Initializes deck.
      *
@@ -22,6 +25,8 @@ class Deck
      * @param int $burn
      * @param int $removal
      * @param int $land
+     *
+     * @throws InvalidDeckException
      */
     public function __construct(
         int $bear = 0,
@@ -29,6 +34,14 @@ class Deck
         int $removal = 0,
         int $land = 0
     ) {
+        // Check minimum deck requirements
+        if ($bear + $burn + $removal + $land < self::MIN_DECK_SIZE) {
+            throw new InvalidDeckException(
+                $bear + $burn + $removal + $land,
+                self::MIN_DECK_SIZE
+            );
+        }
+
         // Load any bear cards
         for ($i = 0; $i < $bear; ++$i) {
             $this->cards[] = new Bear();

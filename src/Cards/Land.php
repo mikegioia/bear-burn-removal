@@ -2,7 +2,7 @@
 
 namespace Magic\Cards;
 
-use Magic\Board;
+use Magic\Player;
 use Magic\Card;
 
 class Land extends Card
@@ -34,10 +34,11 @@ class Land extends Card
     /**
      * Add the land to the board.
      *
-     * @param  Board  $board [description]
+     * @param  Player  $player
      */
-    public function play(Board $board): void
+    public function play(Player $player): void
     {
-        $board->addLand($this);
+        // Add this land to the battlfield
+        $player->getBoard()->addLand($this);
     }
 }

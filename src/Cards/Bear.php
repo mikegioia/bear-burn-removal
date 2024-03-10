@@ -2,7 +2,7 @@
 
 namespace Magic\Cards;
 
-use Magic\Board;
+use Magic\Player;
 use Magic\Card;
 
 class Bear extends Card
@@ -11,6 +11,22 @@ class Bear extends Card
      * @return int
      */
     public function getCastingCost(): int
+    {
+        return 2;
+    }
+
+    /**
+     * @return int
+     */
+    public function getPower(): int
+    {
+        return 2;
+    }
+
+    /**
+     * @return int
+     */
+    public function getToughness(): int
     {
         return 2;
     }
@@ -26,11 +42,14 @@ class Bear extends Card
     /**
      * Add the creature to the board.
      *
-     * @param  Board  $board [description]
+     * @param  Player  $player
      */
-    public function play(Board $board): void
+    public function play(Player $player): void
     {
-        $board->tapLands($this);
-        $board->addCreature($this);
+        // Tap mana to play this card
+        $player->getBoard()->tapLands($this);
+
+        // Add this creature to the battlefield
+        $player->getBoard()->addCreature($this);
     }
 }

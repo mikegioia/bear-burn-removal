@@ -2,10 +2,12 @@
 
 namespace Magic\Exceptions;
 
-class PlayerWithZeroLifeException extends \Exception
+use Magic\Player;
+
+class PlayerWithZeroLifeException extends GameOverException
 {
-    public function __construct()
+    public function __construct(Player $player)
     {
-        $this->message = 'Player life total went to 0';
+        parent::__construct($player, 'Player life total went to 0');
     }
 }
