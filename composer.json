@@ -17,6 +17,7 @@
         "php": "^8.3"
     },
     "require-dev": {
+        "friendsofphp/php-cs-fixer": "^3.51",
         "phpstan/phpstan": "^1.10"
     },
     "config": {
@@ -27,6 +28,8 @@
         }
     },
     "scripts": {
+        "lint": "./vendor/bin/php-cs-fixer fix --dry-run --diff",
+        "lint-fix": "./vendor/bin/php-cs-fixer fix",
         "phpstan": "./vendor/bin/phpstan analyze run-games.php src --level=8"
     }
 }

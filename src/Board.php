@@ -73,9 +73,9 @@ class Board
     }
 
     /**
-     * @throws ManaNotAvailableException
-     *
      * @return Card
+     *
+     * @throws ManaNotAvailableException
      */
     public function getUntappedLand(): Card
     {
@@ -101,13 +101,13 @@ class Board
     /**
      * Taps lands to pay for the card.
      *
-     * @throws ManaNotAvailableException
-     *
      * @param  Card   $card
+     *
+     * @throws ManaNotAvailableException
      */
     public function tapLands(Card $card): void
     {
-        for ($i = 0; $i < $card->getCastingCost(); $i++) {
+        for ($i = 0; $i < $card->getCastingCost(); ++$i) {
             $this->getUntappedLand()->tap();
         }
     }

@@ -25,6 +25,5 @@ class Burn extends Card
 
     public function play(Board $board): void
     {
-        //
     }
 }

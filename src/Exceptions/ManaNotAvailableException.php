@@ -2,9 +2,7 @@
 
 namespace Magic\Exceptions;
 
-use Exception;
-
-class ManaNotAvailableException extends Exception
+class ManaNotAvailableException extends \Exception
 {
     public function __construct()
     {

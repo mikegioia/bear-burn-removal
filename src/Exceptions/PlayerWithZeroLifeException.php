@@ -2,9 +2,7 @@
 
 namespace Magic\Exceptions;
 
-use Exception;
-
-class PlayerWithZeroLifeException extends Exception
+class PlayerWithZeroLifeException extends \Exception
 {
     public function __construct()
     {

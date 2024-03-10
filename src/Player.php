@@ -60,7 +60,7 @@ class Player
         $this->playerId = $playerId;
 
         // Draw 7 cards into the opening hand
-        for ($i = 0; $i < 7; $i++) {
+        for ($i = 0; $i < 7; ++$i) {
             $this->hand->addCard($this->deck->draw());
         }
     }
@@ -126,7 +126,7 @@ class Player
      *   1. If burn in hand and bear on board, target bear
      *   2. If removal in hand and bear on board, target bear
      *   3. If burn in hand and board is clear, target player
-     *   4. If bear on board since last turn, attack player
+     *   4. If bear on board since last turn, attack player.
      */
     public function takeTurn(): void
     {
@@ -197,7 +197,7 @@ class Player
      */
     private function end(): void
     {
-        $this->turnsTaken++;
+        ++$this->turnsTaken;
     }
 
     /**

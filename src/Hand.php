@@ -6,7 +6,7 @@ use Magic\Exceptions\CardNotFoundException;
 
 class Hand
 {
-	/**
+    /**
      * @var array<Card>
      */
     private array $cards;
@@ -16,7 +16,7 @@ class Hand
      */
     public function __construct(array $cards = [])
     {
-    	$this->cards = $cards;
+        $this->cards = $cards;
     }
 
     /**
@@ -39,9 +39,9 @@ class Hand
      * Removes a creature, if found, from the list of cards
      * and returns that card.
      *
-     * @throws CardNotFoundException
-     *
      * @return Card
+     *
+     * @throws CardNotFoundException
      */
     public function getCreature(): Card
     {
@@ -61,9 +61,9 @@ class Hand
      * Removes a land, if found, from the list of cards
      * and returns that card.
      *
-     * @throws CardNotFoundException
-     *
      * @return Card
+     *
+     * @throws CardNotFoundException
      */
     public function getLand(): Card
     {

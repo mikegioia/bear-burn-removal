@@ -2,9 +2,7 @@
 
 namespace Magic\Exceptions;
 
-use Exception;
-
-class CardNotFoundException extends Exception
+class CardNotFoundException extends \Exception
 {
     public function __construct()
     {

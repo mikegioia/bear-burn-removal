@@ -30,22 +30,22 @@ class Deck
         int $land = 0
     ) {
         // Load any bear cards
-        for ($i = 0; $i < $bear; $i++) {
+        for ($i = 0; $i < $bear; ++$i) {
             $this->cards[] = new Bear();
         }
 
         // Load any burn cards
-        for ($i = 0; $i < $burn; $i++) {
+        for ($i = 0; $i < $burn; ++$i) {
             $this->cards[] = new Burn();
         }
 
         // Load any removal cards
-        for ($i = 0; $i < $removal; $i++) {
+        for ($i = 0; $i < $removal; ++$i) {
             $this->cards[] = new Removal();
         }
 
         // Load any removal cards
-        for ($i = 0; $i < $land; $i++) {
+        for ($i = 0; $i < $land; ++$i) {
             $this->cards[] = new Land();
         }
 
@@ -71,9 +71,9 @@ class Deck
     }
 
     /**
-     * @throws DrawFromEmptyDeckException
-     *
      * @return Card
+     *
+     * @throws DrawFromEmptyDeckException
      */
     public function draw(): Card
     {

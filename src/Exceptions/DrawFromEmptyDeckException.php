@@ -2,9 +2,7 @@
 
 namespace Magic\Exceptions;
 
-use Exception;
-
-class DrawFromEmptyDeckException extends Exception
+class DrawFromEmptyDeckException extends \Exception
 {
     public function __construct()
     {

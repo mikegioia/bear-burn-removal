@@ -63,7 +63,7 @@ class Game
 
     public function takeTurn(): void
     {
-        $this->turns++;
+        ++$this->turns;
         $this->gameLog[$this->turns] = [
             'P1' => [],
             'P2' => []

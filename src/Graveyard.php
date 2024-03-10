@@ -4,7 +4,7 @@ namespace Magic;
 
 class Graveyard
 {
-	/**
+    /**
      * @var array<Card>
      */
     private array $cards;
@@ -14,7 +14,7 @@ class Graveyard
      */
     public function addCard(Card $card): void
     {
-    	$this->cards[] = $card;
+        $this->cards[] = $card;
     }
 
     /**
