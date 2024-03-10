@@ -1,6 +1,7 @@
 {
     "name": "mikegioia/bear-burn-removal",
     "description": "Magic: the Gathering test game simulator",
+    "license": "GPL-3.0-or-later",
     "autoload": {
         "psr-4": {
             "Magic\\": "src/"
