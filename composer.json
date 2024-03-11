@@ -1,0 +1,35 @@
+{
+    "name": "mikegioia/bear-burn-removal",
+    "description": "Magic: the Gathering test game simulator",
+    "license": "GPL-3.0-or-later",
+    "autoload": {
+        "psr-4": {
+            "Magic\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Mike Gioia",
+            "email": "mike@gioia.us"
+        }
+    ],
+    "require": {
+        "php": "^8.3"
+    },
+    "require-dev": {
+        "friendsofphp/php-cs-fixer": "^3.51",
+        "phpstan/phpstan": "^1.10"
+    },
+    "config": {
+        "sort-packages": true,
+        "optimize-autoloader": true,
+        "allow-plugins": {
+            "php-http/discovery": true
+        }
+    },
+    "scripts": {
+        "lint": "./vendor/bin/php-cs-fixer fix --dry-run --diff",
+        "lint-fix": "./vendor/bin/php-cs-fixer fix",
+        "phpstan": "./vendor/bin/phpstan analyze run-games.php src --level=8"
+    }
+}
