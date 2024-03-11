@@ -26,6 +26,8 @@ if (! file_exists(__DIR__.'/vendor/autoload.php')) {
 require __DIR__.'/vendor/autoload.php';
 
 // @todo - read in command line arguments - $argv
+// Number of games to play
+$iterations = 10000;
 
 // Player win counters
 $wins = [
@@ -33,8 +35,10 @@ $wins = [
     2 => 0
 ];
 
+echo 'Simulating '.number_format($iterations).' games', PHP_EOL;
+
 try {
-    for ($i = 0; $i < 1000; $i++) {
+    for ($i = 0; $i < $iterations; $i++) {
         // Set up the new game
         $deckOne = new Deck(bear: 37, land: 23);
         $deckTwo = new Deck(removal: 37, land: 23);
@@ -43,7 +47,12 @@ try {
         // Play a game
         $winner = $game->play();
         $wins[$winner->getPlayerId()]++;
-        // echo implode(PHP_EOL, $game->getPrintableGameLog());
+
+        // if ($winner->getPlayerId() === 1) {
+        //     echo implode(PHP_EOL, $game->getPrintableGameLog()), PHP_EOL;
+
+        //     exit(0);
+        // }
     }
 
 } catch (Throwable $e) {
@@ -53,5 +62,9 @@ try {
     exit(1);
 }
 
-echo PHP_EOL, 'Results: ', PHP_EOL, '  Player 1: ', $wins[1],
-    PHP_EOL, '  Player 2: ', $wins[2], PHP_EOL;
+$p1Winrate = number_format($wins[1] / $iterations * 100, 2);
+$p2Winrate = number_format($wins[2] / $iterations * 100, 2);
+
+echo 'Results: ', PHP_EOL,
+    '  Player 1: ', $wins[1], ' (', $p1Winrate, '%)', PHP_EOL,
+    '  Player 2: ', $wins[2], ' (', $p2Winrate, '%)', PHP_EOL;

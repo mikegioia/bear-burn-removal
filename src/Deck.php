@@ -84,6 +84,16 @@ class Deck
     }
 
     /**
+     * Adds a card to the bottom of the stack.
+     *
+     * @param Card $card
+     */
+    public function addCard(Card $card): void
+    {
+        $this->cards[] = $card;
+    }
+
+    /**
      * @return Card
      *
      * @throws DrawFromEmptyDeckException

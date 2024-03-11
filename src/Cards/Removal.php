@@ -8,6 +8,14 @@ use Magic\Player;
 class Removal extends Card
 {
     /**
+     * @return string
+     */
+    public function __toString(): string
+    {
+        return 'Removal';
+    }
+
+    /**
      * @return int
      */
     public function getCastingCost(): int
@@ -40,5 +48,7 @@ class Removal extends Card
 
         // Move this card to the graveyard
         $player->getGraveyard()->addCard($this);
+
+        $player->logAction('played a removal spell');
     }
 }

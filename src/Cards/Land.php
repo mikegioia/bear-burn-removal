@@ -8,6 +8,14 @@ use Magic\Player;
 class Land extends Card
 {
     /**
+     * @return string
+     */
+    public function __toString(): string
+    {
+        return 'Land';
+    }
+
+    /**
      * @return int
      */
     public function getCastingCost(): int

@@ -63,10 +63,10 @@ class Player
         $this->isStartingPlayer = 1 === $playerId;
         $this->playerId = $playerId;
 
-        // Draw 7 cards into the opening hand
-        for ($i = 0; $i < 7; ++$i) {
-            $this->hand->addCard($this->deck->draw());
-        }
+        // Draw opening hand, with a possible mulligan
+        $this->hand->drawOpening($this);
+
+        $this->logAction('opening hand: '.$this->hand->getCardList());
     }
 
     /**
@@ -179,9 +179,21 @@ class Player
     {
         $this->lifeTotal = $this->lifeTotal - $amount;
 
+        $this->getGame()->updateLifeLog($this);
+
         if ($this->lifeTotal <= 0) {
             throw new PlayerWithZeroLifeException($this);
         }
+    }
+
+    /**
+     * Logs a game action to the event log.
+     *
+     * @param  string $message
+     */
+    public function logAction(string $message): void
+    {
+        $this->game->logAction($this, $message);
     }
 
     /**
@@ -204,7 +216,11 @@ class Player
             return;
         }
 
-        $this->hand->addCard($this->deck->draw());
+        $newCard = $this->deck->draw();
+
+        $this->logAction('draw '.((string) $newCard));
+
+        $this->hand->addCard($newCard);
     }
 
     /**
@@ -278,7 +294,6 @@ class Player
 
             if ($this->board->hasManaAvailable($creature)) {
                 $creature->play($this);
-                $this->logAction('played a creature');
 
                 // Try to play another one if we can
                 $this->playCreatures();
@@ -300,7 +315,6 @@ class Player
 
                 if ($this->board->hasManaAvailable($removal)) {
                     $removal->play($this);
-                    $this->logAction('played a removal spell');
 
                     // Try to play another one if we can
                     $this->playRemoval();
@@ -318,15 +332,18 @@ class Player
      */
     private function playBurn(): void
     {
-    }
+        if ($this->hand->hasBurn()) {
+            $burn = $this->hand->takeBurn();
 
-    /**
-     * Logs a game action to the event log.
-     *
-     * @param  string $message
-     */
-    private function logAction(string $message): void
-    {
-        $this->game->logAction($this, $message);
+            if ($this->board->hasManaAvailable($burn)) {
+                $burn->play($this);
+
+                // Try to play another one if we can
+                $this->playBurn();
+            } else {
+                // Don't have mana so put the card back in hand
+                $this->hand->addCard($burn);
+            }
+        }
     }
 }

@@ -16,8 +16,17 @@ abstract class Card
 
     /**
      * Individual card's casting cost.
+     *
+     * @return int
      */
     abstract public function getCastingCost(): int;
+
+    /**
+     * Card returns it's type or name.
+     *
+     * @return string
+     */
+    abstract public function __toString(): string;
 
     /**
      * Performs card actions.

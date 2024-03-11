@@ -8,6 +8,14 @@ use Magic\Player;
 class Bear extends Card
 {
     /**
+     * @return string
+     */
+    public function __toString(): string
+    {
+        return 'Bear';
+    }
+
+    /**
      * @return int
      */
     public function getCastingCost(): int
@@ -51,5 +59,7 @@ class Bear extends Card
 
         // Add this creature to the battlefield
         $player->getBoard()->addCreature($this);
+
+        $player->logAction('played a creature');
     }
 }
