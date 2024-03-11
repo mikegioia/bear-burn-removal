@@ -17,11 +17,11 @@ This creates a new deck with 37 Bears and 23 Lands.
 
 ## Notes
 
-* Will mulligan up to 3 times, throwing hands back that have 1 land or 6/7 lands. Tries to optimally bottoms cards after mulligans.
+* Mulligans up to 3 times, throwing hands back that have 1 land or 6/7 lands. Tries to optimally bottom cards from mulligans.
 * Creatures do not block at all.
 * All spells are cast at sorcery speed.
-* Maximum deck size is 250 cards
-* Simulations ran 100,000 games. I didn't notice much different at 1M or higher. Only takes about 30 seconds to run 100k games.
+* Maximum deck size is 250 cards.
+* Simulations ran 100,000 games. I didn't notice much difference at 1M or higher. Only takes about 30 seconds to run 100k games.
 
 ## Results
 
@@ -49,7 +49,7 @@ This creates a new deck with 37 Bears and 23 Lands.
 
 ### Non-Bears vs. Bears
 
-This could definitely use more research, but from my tests, adding Burn or Creatures
+This could definitely use more research, but from my tests adding Burn or Creatures
 to the deck did not improve the Removal deck's on-the-draw win-rate.
 
 What _did_ help was increasing the Removal cards and decreasing the lands.
@@ -61,10 +61,10 @@ against the 37 Bears seems to work okay given the mulligans.
 ### Bears vs. Bears
 
 The highest win-rate on the play in this experiment is just Bears and Lands.
-The on-the-draw Bears deck plays 37 Bears and 23 Lands.
-Here is the on-the-play win-rate after 100,000 games:
+The on-the-draw Bears deck plays 37 Bears and 23 Lands. Here is the on-the-play
+win-rate after 100,000 games:
 
-| Lands | Win-rate |
+| Lands | Win-Rate |
 | ----- | -------- |
 | 15    | 96.02%   |
 | 16    | 97.32%   |
@@ -83,5 +83,5 @@ Here is the on-the-play win-rate after 100,000 games:
 | 29    | 92.47%   |
 | 30    | 90.67%   |
 
-Here it seems in a deck full of 2 mana spells, 18-20 lands is optimal. Greedy players could get away with 19.
+Here it seems in a deck full of 2 mana spells, 18-20 lands is optimal.
 
